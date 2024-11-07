@@ -8,7 +8,7 @@ async function loadContent() {
     console.log('Bodies:', bodies); // Log bodies content
     
     const buttons = await fetch('nw/button/button.txt').then(res => res.text()).then(data => data.split('\n').map(line => {
-      const [buttonText, buttonHTML] = line.split('\\');
+      const [buttonText, buttonHTML] = line.split('\');
       return { buttonText: buttonText.trim(), buttonHTML: buttonHTML.trim() };
     }));
     console.log('Buttons:', buttons); // Log buttons content
