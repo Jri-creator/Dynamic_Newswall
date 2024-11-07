@@ -1,0 +1,35 @@
+#newswall {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.content-container {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.slide-header {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.slide-body {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  overflow-wrap: break-word;
+}
+
+.slide-buttons {
+  margin-top: 20px;
+}
+
+.slide-image {
+  max-width: 200px;
+  height: auto;
+  flex-shrink: 0; /* Prevent image from shrinking */
+  margin-left: 20px; /* Space between text and image */
+}
