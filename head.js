@@ -1,16 +1,20 @@
 async function loadContent() {
   try {
-    // Fetch data from each file with specified folders
-    const headers = await fetch('nw/head/head.txt').then(res => res.text()).then(data => data.split('\n'));
+    // Fetch and filter data from each file, ignoring any blank lines
+    const headers = await fetch('nw/head/head.txt')
+      .then(res => res.text())
+      .then(data => data.split('\n').filter(line => line.trim() !== ''));
     console.log('Headers:', headers); // Log headers content
     
-    const bodies = await fetch('nw/body/txt.txt').then(res => res.text()).then(data => data.split('\n'));
+    const bodies = await fetch('nw/body/txt.txt')
+      .then(res => res.text())
+      .then(data => data.split('\n').filter(line => line.trim() !== ''));
     console.log('Bodies:', bodies); // Log bodies content
     
     const buttons = await fetch('nw/button/button.txt')
       .then(res => res.text())
       .then(data => {
-        const lines = data.split('\n');
+        const lines = data.split('\n').filter(line => line.trim() !== '');
         return lines.reduce((acc, line, index) => {
           if (index % 2 === 0) {
             acc.push({ buttonText: line.trim(), buttonHTML: '' });
@@ -24,13 +28,19 @@ async function loadContent() {
       });
     console.log('Buttons:', buttons); // Log buttons content
     
-    const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `nw/webpng/${filename.trim()}`));
+    const images = await fetch('nw/webpng/png.txt')
+      .then(res => res.text())
+      .then(data => data.split('\n').filter(line => line.trim() !== '').map(filename => `nw/webpng/${filename.trim()}`));
     console.log('Images:', images); // Log image paths
     
-    const times = await fetch('nw/timers/time.txt').then(res => res.text()).then(data => data.split('\n').map(Number));
+    const times = await fetch('nw/timers/time.txt')
+      .then(res => res.text())
+      .then(data => data.split('\n').filter(line => line.trim() !== '').map(Number));
     console.log('Times:', times); // Log timing for slides
     
-    const colors = await fetch('nw/colors/color.txt').then(res => res.text()).then(data => data.split('\n'));
+    const colors = await fetch('nw/colors/color.txt')
+      .then(res => res.text())
+      .then(data => data.split('\n').filter(line => line.trim() !== ''));
     console.log('Colors:', colors); // Log colors content
 
     let slideIndex = 0;
