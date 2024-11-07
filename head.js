@@ -12,12 +12,9 @@ async function loadContent() {
       .then(data => {
         const lines = data.split('\n');
         return lines.reduce((acc, line, index) => {
-          // Handle odd and even lines separately for button text and HTML
           if (index % 2 === 0) {
-            // Even line (0-based) -> button text
             acc.push({ buttonText: line.trim(), buttonHTML: '' });
           } else {
-            // Odd line (0-based) -> button HTML
             if (acc.length > 0) {
               acc[acc.length - 1].buttonHTML = line.trim();
             }
@@ -43,6 +40,9 @@ async function loadContent() {
       const newswall = document.getElementById('newswall');
       newswall.innerHTML = '';
 
+      // Remove previous color class
+      newswall.className = 'newswall'; // Reset to default class
+
       // Create header
       const header = document.createElement('div');
       header.classList.add('slide-header');
@@ -64,8 +64,9 @@ async function loadContent() {
         newswall.appendChild(buttonContainer);
       }
 
-      // Set color and background color
-      newswall.classList.add(`w3-${colors[index] || 'white'}`);
+      // Set color and background color, loop if out of range
+      const color = colors[index % colors.length] || 'white'; // Use modulo to wrap around colors array
+      newswall.classList.add(`w3-${color}`);
 
       // Display image if available
       if (images[index]) {
