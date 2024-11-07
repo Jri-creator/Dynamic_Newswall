@@ -1,4 +1,4 @@
-Hi
-<button></button>
-He
-<button></button>
+Goto main
+<a href="jri.creator.github.io/Dynamic_Newswall/"><button></button></a>
+Not a button
+<button disabled></button>
