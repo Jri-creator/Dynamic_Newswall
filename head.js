@@ -13,8 +13,13 @@ async function loadContent() {
     }));
     console.log('Buttons:', buttons); // Log buttons content
     
-    const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `nw/webpng/${filename.trim()}`));
-    console.log('Images:', images); // Log image paths
+//    const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `nw/webpng/${filename.trim()}`));
+//    console.log('Images:', images); // Log image paths
+
+      const images = await fetch('nw/webpng/png.txt')
+      .then(res => res.text())
+      .then(data => data.split('\n').map(filename => filename ? `nw/webpng/${filename.trim()}` : null));
+      console.log('Images:', images); // Log image paths
     
     const times = await fetch('nw/timers/time.txt').then(res => res.text()).then(data => data.split('\n').map(Number));
     console.log('Times:', times); // Log timing for slides
