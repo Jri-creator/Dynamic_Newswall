@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Newswall</title>
   <link rel="stylesheet" href="./w3.css">
-  <style>
+  <!--<style>
     /* Newswall styling */
     #newswall {
       position: relative;
@@ -38,6 +38,44 @@
       right: 10px;
       max-width: 150px;
     }
+  </style> -->
+  <style>
+    #newswall {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.content-container {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.slide-header {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.slide-body {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  overflow-wrap: break-word;
+}
+
+.slide-buttons {
+  margin-top: 20px;
+}
+
+.slide-image {
+  max-width: 200px;
+  height: auto;
+  flex-shrink: 0; /* Prevent image from shrinking */
+  margin-left: 20px; /* Space between text and image */
+}
+
   </style>
 </head>
 <body>
