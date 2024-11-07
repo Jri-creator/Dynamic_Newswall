@@ -7,19 +7,28 @@ async function loadContent() {
     const bodies = await fetch('nw/body/txt.txt').then(res => res.text()).then(data => data.split('\n'));
     console.log('Bodies:', bodies); // Log bodies content
     
-    const buttons = await fetch('nw/button/button.txt').then(res => res.text()).then(data => data.split('\n').map(line => {
-      const [buttonText, buttonHTML] = line.split('\+');
-      return { buttonText: buttonText.trim(), buttonHTML: buttonHTML.trim() };
-    }));
+    const buttons = await fetch('nw/button/button.txt')
+      .then(res => res.text())
+      .then(data => {
+        const lines = data.split('\n');
+        return lines.reduce((acc, line, index) => {
+          // Handle odd and even lines separately for button text and HTML
+          if (index % 2 === 0) {
+            // Even line (0-based) -> button text
+            acc.push({ buttonText: line.trim(), buttonHTML: '' });
+          } else {
+            // Odd line (0-based) -> button HTML
+            if (acc.length > 0) {
+              acc[acc.length - 1].buttonHTML = line.trim();
+            }
+          }
+          return acc;
+        }, []);
+      });
     console.log('Buttons:', buttons); // Log buttons content
     
-//    const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `nw/webpng/${filename.trim()}`));
-//    console.log('Images:', images); // Log image paths
-
-      const images = await fetch('nw/webpng/png.txt')
-      .then(res => res.text())
-      .then(data => data.split('\n').map(filename => filename ? `nw/webpng/${filename.trim()}` : null));
-      console.log('Images:', images); // Log image paths
+    const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `nw/webpng/${filename.trim()}`));
+    console.log('Images:', images); // Log image paths
     
     const times = await fetch('nw/timers/time.txt').then(res => res.text()).then(data => data.split('\n').map(Number));
     console.log('Times:', times); // Log timing for slides
