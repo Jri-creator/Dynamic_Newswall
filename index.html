@@ -1,12 +1,12 @@
 async function loadContent() {
   // Fetch data from each file with prepended folders
-  const headers = await fetch('nw/head/head.txt').then(res => res.text()).then(data => data.split('\n'));
-  const bodies = await fetch('nw/body/txt.txt').then(res => res.text()).then(data => data.split('\n'));
-  const buttons = await fetch('nw/button/button.txt').then(res => res.text()).then(data => data.split('\n').map(line => {
+  const headers = await fetch('Dynamic_Newswall/nw/head/head.txt').then(res => res.text()).then(data => data.split('\n'));
+  const bodies = await fetch('Dynamic_Newswall/nw/body/txt.txt').then(res => res.text()).then(data => data.split('\n'));
+  const buttons = await fetch(Dynamic_Newswall/'nw/button/button.txt').then(res => res.text()).then(data => data.split('\n').map(line => {
     const [buttonText, buttonHTML] = line.split('\\');
     return { buttonText: buttonText.trim(), buttonHTML: buttonHTML.trim() };
   }));
-  const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `nw/webpng/${filename.trim()}`));
+  const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `Dynamic_Newswall/nw/webpng/${filename.trim()}`));
   const times = await fetch('nw/timers/time.txt').then(res => res.text()).then(data => data.split('\n').map(Number));
   const colors = await fetch('nw/colors/color.txt').then(res => res.text()).then(data => data.split('\n'));
 
