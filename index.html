@@ -1,61 +1,51 @@
-async function loadContent() {
-  // Fetch data from each file with prepended folders
-  const headers = await fetch('Dynamic_Newswall/nw/head/head.txt').then(res => res.text()).then(data => data.split('\n'));
-  const bodies = await fetch('Dynamic_Newswall/nw/body/txt.txt').then(res => res.text()).then(data => data.split('\n'));
-  const buttons = await fetch(Dynamic_Newswall/'nw/button/button.txt').then(res => res.text()).then(data => data.split('\n').map(line => {
-    const [buttonText, buttonHTML] = line.split('\\');
-    return { buttonText: buttonText.trim(), buttonHTML: buttonHTML.trim() };
-  }));
-  const images = await fetch('nw/webpng/png.txt').then(res => res.text()).then(data => data.split('\n').map(filename => `Dynamic_Newswall/nw/webpng/${filename.trim()}`));
-  const times = await fetch('nw/timers/time.txt').then(res => res.text()).then(data => data.split('\n').map(Number));
-  const colors = await fetch('nw/colors/color.txt').then(res => res.text()).then(data => data.split('\n'));
-
-  let slideIndex = 0;
-
-  function showSlide(index) {
-    // Clear previous content
-    const newswall = document.getElementById('newswall');
-    newswall.innerHTML = '';
-
-    // Create header
-    const header = document.createElement('div');
-    header.classList.add('slide-header');
-    header.textContent = headers[index] || '';
-    newswall.appendChild(header);
-
-    // Create body content
-    const body = document.createElement('div');
-    body.classList.add('slide-body');
-    body.textContent = bodies[index] || '';
-    newswall.appendChild(body);
-
-    // Create buttons
-    const buttonContainer = document.createElement('div');
-    buttonContainer.classList.add('slide-buttons');
-    const buttonData = buttons[index] || {};
-    if (buttonData.buttonText && buttonData.buttonHTML) {
-      buttonContainer.innerHTML = `<button onclick="${buttonData.buttonHTML}">${buttonData.buttonText}</button>`;
-      newswall.appendChild(buttonContainer);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newswall</title>
+  <link rel="stylesheet" href="./w3.css">
+  <style>
+    /* Newswall styling */
+    #newswall {
+      position: relative;
+      width: 100%;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border: 2px solid black;
     }
-
-    // Set color and background color
-    newswall.classList.add(`w3-${colors[index] || 'white'}`);
-
-    // Display image if available
-    if (images[index]) {
-      const image = document.createElement('img');
-      image.classList.add('slide-image');
-      image.src = images[index];
-      newswall.appendChild(image);
+    /* Header styling */
+    .slide-header {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
     }
+    /* Body content styling */
+    .slide-body {
+      margin-top: 40px;
+      font-size: 1.2rem;
+    }
+    /* Button container styling */
+    .slide-buttons {
+      margin-top: 20px;
+    }
+    /* Image styling */
+    .slide-image {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      max-width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="p" style="text-align: center; border-bottom: solid black 4px;">Newswall</h1>
+  <div id="newswall" class="w3-panel w3-border w3-padding-large">
+    <!-- Dynamic content will be injected here -->
+  </div>
 
-    // Set timer for next slide
-    setTimeout(() => {
-      slideIndex = (slideIndex + 1) % headers.length;
-      showSlide(slideIndex);
-    }, (times[index] || 5) * 1000);
-  }
-
-  // Start the slideshow
-  showSlide(slideIndex);
-}
+  <script src="head.js"></script> <!-- Link to external JavaScript file -->
+</body>
+</html>
