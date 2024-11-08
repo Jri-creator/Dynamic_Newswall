@@ -1,4 +1,4 @@
 Goto main
-<a href="jri.creator.github.io/Dynamic_Newswall/"><button></button></a>
+https://jri.creator.github.io/Dynamic_Newswall/  {window, 400px, 600px}
 Not a button
-<button disabled></button>
+{disabled}
