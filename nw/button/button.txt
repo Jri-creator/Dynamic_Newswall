@@ -1,4 +1,4 @@
 Nothing here...
 {disabled}
 Jri Radio Finder
-https://jri-creator.github.io/radio-finder/ {window, 500px, 500px}
+https://jri-creator.github.io/radio_finder/ {window, 500px, 500px}
