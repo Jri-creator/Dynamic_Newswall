@@ -6,39 +6,42 @@ async function loadContent() {
     const bodies = await fetch('nw/body/txt.txt')
       .then(res => res.text())
       .then(data => data.split('\n').filter(line => line.trim() !== ''));
-    
+
     const buttons = await fetch('nw/button/button.txt')
       .then(res => res.text())
       .then(data => {
         const lines = data.split('\n').filter(line => line.trim() !== '');
         const buttonData = [];
         for (let i = 0; i < lines.length; i += 2) {
-          let buttonText = lines[i].trim();
-          const buttonLink = lines[i + 1] ? lines[i + 1].trim() : '#';
+          const buttonText = lines[i].trim(); // Odd line: Button text
+          const buttonOptions = lines[i + 1] ? lines[i + 1].trim() : ''; // Even line: URL and definitions
 
           let isDisabled = false;
           let openInWindow = false;
           let windowWidth = 600;
           let windowHeight = 400;
+          let buttonLink = buttonOptions;
 
-          // Check for special cases in the button text
-          if (buttonText.includes('{disabled}')) {
+          // Check for {disabled}
+          if (buttonOptions.includes('{disabled}')) {
             isDisabled = true;
-            buttonText = buttonText.replace('{disabled}', '').trim();
+            buttonLink = '#'; // Disable link if button is disabled
           }
-          const windowMatch = buttonText.match(/\{window,\s*(\d+),\s*(\d+)\}/);
+
+          // Check for {window, L, W}
+          const windowMatch = buttonOptions.match(/\{window,\s*(\d+),\s*(\d+)\}/);
           if (windowMatch) {
             openInWindow = true;
             windowWidth = parseInt(windowMatch[1], 10);
             windowHeight = parseInt(windowMatch[2], 10);
-            buttonText = buttonText.replace(/\{window,\s*\d+,\s*\d+\}/, '').trim();
+            buttonLink = buttonOptions.replace(/\{window,\s*\d+,\s*\d+\}/, '').trim();
           }
 
           buttonData.push({ buttonText, buttonLink, isDisabled, openInWindow, windowWidth, windowHeight });
         }
         return buttonData;
       });
-    
+
     const images = await fetch('nw/webpng/png.txt')
       .then(res => res.text())
       .then(data => data.split('\n').filter(line => line.trim() !== '').map(filename => `nw/webpng/${filename.trim()}`));
