@@ -18,8 +18,8 @@ async function loadContent() {
 
           let isDisabled = false;
           let openInWindow = false;
-          let windowWidth = 600;
-          let windowHeight = 400;
+          let windowWidth = '600px';
+          let windowHeight = '400px';
           let buttonLink = buttonOptions;
 
           // Check for {disabled}
@@ -28,13 +28,13 @@ async function loadContent() {
             buttonLink = '#'; // Disable link if button is disabled
           }
 
-          // Check for {window, L, W}
-          const windowMatch = buttonOptions.match(/\{window,\s*(\d+),\s*(\d+)\}/);
+          // Check for {window, L, W} and extract dimensions with units
+          const windowMatch = buttonOptions.match(/\{window,\s*([\d]+px),\s*([\d]+px)\}/);
           if (windowMatch) {
             openInWindow = true;
-            windowWidth = parseInt(windowMatch[1], 10);
-            windowHeight = parseInt(windowMatch[2], 10);
-            buttonLink = buttonOptions.replace(/\{window,\s*\d+,\s*\d+\}/, '').trim();
+            windowWidth = windowMatch[1];
+            windowHeight = windowMatch[2];
+            buttonLink = buttonOptions.replace(/\{window,\s*[\d]+px,\s*[\d]+px\}/, '').trim();
           }
 
           buttonData.push({ buttonText, buttonLink, isDisabled, openInWindow, windowWidth, windowHeight });
