@@ -7,16 +7,34 @@ async function loadContent() {
       .then(res => res.text())
       .then(data => data.split('\n').filter(line => line.trim() !== ''));
     
-    // Parse buttons with even lines as text and odd lines as links
     const buttons = await fetch('nw/button/button.txt')
       .then(res => res.text())
       .then(data => {
         const lines = data.split('\n').filter(line => line.trim() !== '');
         const buttonData = [];
         for (let i = 0; i < lines.length; i += 2) {
-          const buttonText = lines[i].trim();
+          let buttonText = lines[i].trim();
           const buttonLink = lines[i + 1] ? lines[i + 1].trim() : '#';
-          buttonData.push({ buttonText, buttonLink });
+
+          let isDisabled = false;
+          let openInWindow = false;
+          let windowWidth = 600;
+          let windowHeight = 400;
+
+          // Check for special cases in the button text
+          if (buttonText.includes('{disabled}')) {
+            isDisabled = true;
+            buttonText = buttonText.replace('{disabled}', '').trim();
+          }
+          const windowMatch = buttonText.match(/\{window,\s*(\d+),\s*(\d+)\}/);
+          if (windowMatch) {
+            openInWindow = true;
+            windowWidth = parseInt(windowMatch[1], 10);
+            windowHeight = parseInt(windowMatch[2], 10);
+            buttonText = buttonText.replace(/\{window,\s*\d+,\s*\d+\}/, '').trim();
+          }
+
+          buttonData.push({ buttonText, buttonLink, isDisabled, openInWindow, windowWidth, windowHeight });
         }
         return buttonData;
       });
@@ -54,8 +72,20 @@ async function loadContent() {
       const buttonContainer = document.createElement('div');
       buttonContainer.classList.add('slide-buttons');
       const buttonData = buttons[index] || {};
-      if (buttonData.buttonText && buttonData.buttonLink) {
-        buttonContainer.innerHTML = `<a href="${buttonData.buttonLink}" target="_blank"><button>${buttonData.buttonText}</button></a>`;
+
+      if (buttonData.buttonText) {
+        const button = document.createElement('button');
+        button.textContent = buttonData.buttonText;
+
+        if (buttonData.isDisabled) {
+          button.disabled = true;
+          button.classList.add('disabled-button');
+        } else if (buttonData.openInWindow) {
+          button.onclick = () => window.open(buttonData.buttonLink, '_blank', `width=${buttonData.windowWidth},height=${buttonData.windowHeight}`);
+        } else {
+          button.onclick = () => window.open(buttonData.buttonLink, '_blank');
+        }
+        buttonContainer.appendChild(button);
         contentContainer.appendChild(buttonContainer);
       }
 
