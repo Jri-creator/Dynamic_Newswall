@@ -1,2 +1,3 @@
 blue
 yellow
+pale-yellow
