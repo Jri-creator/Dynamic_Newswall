@@ -13,8 +13,8 @@ async function loadContent() {
         const lines = data.split('\n').filter(line => line.trim() !== '');
         const buttonData = [];
         for (let i = 0; i < lines.length; i += 2) {
-          const buttonText = lines[i].trim(); // Odd line: Button text
-          const buttonOptions = lines[i + 1] ? lines[i + 1].trim() : ''; // Even line: URL and definitions
+          const buttonText = lines[i].trim();
+          const buttonOptions = lines[i + 1] ? lines[i + 1].trim() : '';
 
           let isDisabled = false;
           let openInWindow = false;
@@ -22,13 +22,11 @@ async function loadContent() {
           let windowHeight = '400px';
           let buttonLink = buttonOptions;
 
-          // Check for {disabled}
           if (buttonOptions.includes('{disabled}')) {
             isDisabled = true;
-            buttonLink = '#'; // Disable link if button is disabled
+            buttonLink = '#';
           }
 
-          // Check for {window, L, W} and extract dimensions with units
           const windowMatch = buttonOptions.match(/\{window,\s*([\d]+px),\s*([\d]+px)\}/);
           if (windowMatch) {
             openInWindow = true;
@@ -51,10 +49,34 @@ async function loadContent() {
     const colors = await fetch('nw/colors/color.txt')
       .then(res => res.text())
       .then(data => data.split('\n').filter(line => line.trim() !== ''));
+    const tlData = await fetch('nw/tl/tl.txt')
+      .then(res => res.text())
+      .then(data => data.split('\n').filter(line => line.trim() !== ''));
 
     let slideIndex = 0;
 
+    function isSlideValid(tlEntry) {
+      const today = new Date();
+
+      if (tlEntry === '{nd}') return true;
+      if (tlEntry === '{ny}') return false;
+
+      const dateMatch = tlEntry.match(/(\d{2})\/(\d{2})\/(\d{2})/);
+      if (dateMatch) {
+        const [_, month, day, year] = dateMatch;
+        const slideDate = new Date(`20${year}-${month}-${day}`);
+        return today <= slideDate;
+      }
+
+      console.error('Invalid tl.txt entry:', tlEntry);
+      return false;
+    }
+
     function showSlide(index) {
+      while (index < tlData.length && !isSlideValid(tlData[index])) {
+        index = (index + 1) % tlData.length;
+      }
+
       const newswall = document.getElementById('newswall');
       newswall.innerHTML = '';
       newswall.className = 'newswall';
